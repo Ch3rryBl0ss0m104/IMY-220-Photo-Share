@@ -1,0 +1,68 @@
+.profile-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.profile-page__content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.profile-page__tabs {
+  display: flex;
+  background: var(--color-cream-deep);
+  border-radius: var(--radius-pill);
+  padding: 4px;
+}
+
+.profile-page__owner-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.profile-page__albums {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.profile-page__album-card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-3);
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.profile-page__album-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-sm);
+  background: var(--color-lavender);
+  flex-shrink: 0;
+}
+
+.profile-page__album-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.profile-page__album-desc {
+  font-size: 0.82rem;
+  color: var(--color-ink-soft);
+}
+
+@media (max-width: 640px) {
+  .profile-page__albums {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,21 @@
+.feed {
+  columns: 2;
+  column-gap: var(--space-4);
+}
+
+.feed > * {
+  break-inside: avoid;
+  margin-bottom: var(--space-4);
+}
+
+.feed__empty {
+  color: var(--color-ink-soft);
+  text-align: center;
+  padding: var(--space-6) 0;
+}
+
+@media (max-width: 760px) {
+  .feed {
+    columns: 1;
+  }
+}

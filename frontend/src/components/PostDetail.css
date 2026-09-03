@@ -1,0 +1,92 @@
+.post-detail {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.post-detail__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.post-detail__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.post-detail__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+}
+
+.post-detail__author {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.post-detail__time {
+  font-size: 0.78rem;
+  color: var(--color-ink-soft);
+}
+
+.post-detail__hashtags {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.post-detail__owner-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.post-detail__delete {
+  color: var(--color-pink-deep);
+}
+
+.post-detail__aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.post-detail__album-card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.post-detail__album-thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.post-detail__album-label {
+  font-size: 0.75rem;
+  color: var(--color-ink-soft);
+}
+
+.post-detail__album-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.post-detail__report {
+  color: var(--color-pink-deep);
+}
+
+@media (max-width: 820px) {
+  .post-detail {
+    grid-template-columns: 1fr;
+  }
+}

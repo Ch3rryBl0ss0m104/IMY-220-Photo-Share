@@ -1,0 +1,52 @@
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.auth-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.auth-form__field label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-ink-soft);
+}
+
+.auth-form__field input {
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-cream-deep);
+  background: var(--color-cream);
+  font-size: 0.95rem;
+  color: var(--color-ink);
+}
+
+.auth-form__field input:focus {
+  border-color: var(--color-pink);
+}
+
+.auth-form__field input[aria-invalid='true'] {
+  border-color: var(--color-pink-deep);
+}
+
+.auth-form__error {
+  color: var(--color-pink-deep);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.auth-form__submit {
+  margin-top: var(--space-2);
+  width: 100%;
+  text-align: center;
+}
+
+.auth-form__submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}

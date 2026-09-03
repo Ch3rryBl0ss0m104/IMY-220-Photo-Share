@@ -1,0 +1,43 @@
+.create-post {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.create-post__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.create-post__field label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-ink-soft);
+}
+
+.create-post__field input[type='text'],
+.create-post__field input[type='file'],
+.create-post__field textarea {
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-cream-deep);
+  background: var(--color-cream);
+  font-size: 0.9rem;
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+.create-post__field textarea:focus,
+.create-post__field input:focus {
+  border-color: var(--color-pink);
+}
+
+.create-post__filename {
+  font-size: 0.78rem;
+  color: var(--color-ink-soft);
+}

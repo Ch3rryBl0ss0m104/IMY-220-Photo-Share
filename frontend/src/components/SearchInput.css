@@ -1,0 +1,17 @@
+.search-input input {
+  width: 100%;
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--color-cream-deep);
+  background: var(--color-cream);
+  font-size: 0.9rem;
+  color: var(--color-ink);
+}
+
+.search-input input::placeholder {
+  color: var(--color-ink-soft);
+}
+
+.search-input input:focus {
+  border-color: var(--color-pink);
+}
