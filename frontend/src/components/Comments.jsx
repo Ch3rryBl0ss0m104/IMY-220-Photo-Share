@@ -9,7 +9,7 @@ function Comments({ comments }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (!draft.trim()) return;
-    // Dummy local append — persistence lands with the backend deliverable.
+    // Dummy local append - persistence lands with the backend deliverable.
     setLocalComments((prev) => [...prev, { id: `temp-${prev.length}`, authorId: 'u1', text: draft.trim() }]);
     setDraft('');
   };
