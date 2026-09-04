@@ -3,8 +3,8 @@ import LoginForm from '../components/LoginForm.jsx';
 import SignupForm from '../components/SignupForm.jsx';
 import './SplashPage.css';
 
-function SplashPage() {
-  const [mode, setMode] = useState('login');
+function SplashPage({ initialMode = 'login' }) {
+  const [mode, setMode] = useState(initialMode);
 
   return (
     <main className="splash">
