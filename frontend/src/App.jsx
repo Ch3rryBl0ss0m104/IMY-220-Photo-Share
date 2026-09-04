@@ -9,6 +9,7 @@ import AlbumPage from './pages/AlbumPage.jsx';
 function App() {
   return (
     <Routes>
+      <Route path="/" element={<SplashPage />} />
       <Route path="/login" element={<SplashPage initialMode="login" />} />
       <Route path="/signup" element={<SplashPage initialMode="signup" />} />
       <Route path="/home" element={<HomePage />} />
