@@ -150,32 +150,6 @@
   border-radius: 50%;
 }
 
-.splash__decor--dot-1 {
-  width: 16px;
-  height: 16px;
-  background: var(--color-yellow);
-  top: 12%;
-  left: 4%;
-}
-
-.splash__decor--dot-2 {
-  width: 12px;
-  height: 12px;
-  background: var(--color-blue);
-  bottom: 10%;
-  left: 46%;
-}
-
-.splash__decor--squiggle {
-  width: 60px;
-  height: 60px;
-  border: 3px dashed var(--color-lavender);
-  border-radius: 50%;
-  top: 40%;
-  right: 8%;
-  opacity: 0.4;
-}
-
 @media (max-width: 900px) {
   .splash {
     grid-template-columns: 1fr;
