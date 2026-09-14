@@ -10,7 +10,7 @@ function FriendsList({ friends, label = 'friends' }) {
       ) : (
         <div className="friends-list__row">
           {friends.map((friend) => (
-            <ProfilePreview key={friend.id} user={friend} />
+            <ProfilePreview key={friend._id} user={friend} />
           ))}
         </div>
       )}

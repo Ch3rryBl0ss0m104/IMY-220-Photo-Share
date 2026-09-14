@@ -1,22 +1,30 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import * as authApi from '../api/auth.js';
+import { useAuth } from '../context/AuthContext.jsx';
 import './AuthForm.css';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
-
-const initialData = { name: '', email: '', password: '', confirmPassword: '' };
+const initialData = { name: '', username: '', email: '', password: '', confirmPassword: '' };
 
 function SignupForm() {
   const navigate = useNavigate();
+  const { setUser } = useAuth();
   const [formData, setFormData] = useState(initialData);
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
+  const [serverError, setServerError] = useState('');
 
   const validate = (data) => {
     const nextErrors = {};
 
     if (!data.name.trim()) {
       nextErrors.name = 'Name is required.';
+    }
+
+    if (!data.username.trim()) {
+      nextErrors.username = 'Username is required.';
+    } else if (!/^[a-z0-9._]+$/i.test(data.username)) {
+      nextErrors.username = 'Letters, numbers, dots, and underscores only.';
     }
 
     if (!data.email.trim()) {
@@ -54,19 +62,17 @@ function SignupForm() {
     if (Object.keys(validationErrors).length > 0) return;
 
     setStatus('loading');
+    setServerError('');
     try {
-      const response = await fetch(`${API_BASE}/api/auth/signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
-      console.log('Sign-up response (stubbed):', data);
+      const { confirmPassword: _confirmPassword, ...payload } = formData;
+      const data = await authApi.signup(payload);
+      setUser(data.user);
       setStatus('success');
-      // A new account is automatically logged in.
+      // A new account is automatically logged in, per the usability requirement.
       navigate('/home');
     } catch (error) {
       console.error('Sign-up request failed:', error);
+      setServerError(error.message || 'Something went wrong. Try again.');
       setStatus('error');
     }
   };
@@ -87,6 +93,20 @@ function SignupForm() {
           aria-invalid={Boolean(errors.name)}
         />
         {errors.name && <p className="auth-form__error">{errors.name}</p>}
+      </div>
+
+      <div className="auth-form__field">
+        <label htmlFor="signup-username">username</label>
+        <input
+          id="signup-username"
+          name="username"
+          type="text"
+          placeholder="yourname"
+          value={formData.username}
+          onChange={handleChange}
+          aria-invalid={Boolean(errors.username)}
+        />
+        {errors.username && <p className="auth-form__error">{errors.username}</p>}
       </div>
 
       <div className="auth-form__field">
@@ -134,7 +154,7 @@ function SignupForm() {
       <button type="submit" className="btn btn-primary auth-form__submit" disabled={!isValid || status === 'loading'}>
         {status === 'loading' ? 'creating account…' : 'sign up'}
       </button>
-      {status === 'error' && <p className="auth-form__error">Something went wrong. Try again.</p>}
+      {status === 'error' && <p className="auth-form__error">{serverError}</p>}
     </form>
   );
 }

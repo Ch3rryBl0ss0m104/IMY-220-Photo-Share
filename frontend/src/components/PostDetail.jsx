@@ -1,16 +1,20 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { getUserById, albums } from '../data/dummyData.js';
+import { Link, useNavigate } from 'react-router-dom';
 import PostImage from './PostImage.jsx';
 import EditPostForm from './EditPostForm.jsx';
+import * as postsApi from '../api/posts.js';
 import './PostDetail.css';
 
-function PostDetail({ post, isOwner, children }) {
+const REPORT_REASONS = ['Spam', 'Inappropriate content', 'Harassment', 'Copyright violation', 'Other'];
+
+function PostDetail({ post, isOwner, children, onDeleted }) {
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [caption, setCaption] = useState(post.caption);
   const [hashtags, setHashtags] = useState(post.hashtags);
-  const author = getUserById(post.authorId);
-  const parentAlbum = albums.find((album) => album.postIds.includes(post.id));
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportReason, setReportReason] = useState(REPORT_REASONS[0]);
+  const [reportStatus, setReportStatus] = useState('idle');
 
   const handleSave = (updated) => {
     setCaption(updated.caption);
@@ -18,23 +22,45 @@ function PostDetail({ post, isOwner, children }) {
     setIsEditing(false);
   };
 
+  const handleDelete = async () => {
+    if (!window.confirm('Delete this post? This also deletes its comments.')) return;
+    try {
+      await postsApi.deletePost(post._id);
+      onDeleted?.();
+      navigate(`/profile/${post.author?._id}`);
+    } catch (error) {
+      console.error('Delete failed:', error);
+    }
+  };
+
+  const handleReport = async (event) => {
+    event.preventDefault();
+    setReportStatus('loading');
+    try {
+      await postsApi.reportPost(post._id, reportReason);
+      setReportStatus('done');
+    } catch (error) {
+      console.error('Report failed:', error);
+      setReportStatus('error');
+    }
+  };
+
   return (
     <div className="post-detail">
       <div className="post-detail__main">
-        <PostImage color={post.imageColor} alt={caption} />
+        <PostImage src={post.image} alt={caption} />
 
         <div className="post-detail__meta">
-          <span className="post-detail__avatar" style={{ background: author?.avatarColor }} />
+          <span className="post-detail__avatar" style={{ background: post.author?.avatarColor }} />
           <div>
-            <Link to={`/profile/${author?.id}`} className="post-detail__author">
-              {author?.name}
+            <Link to={`/profile/${post.author?._id}`} className="post-detail__author">
+              {post.author?.name}
             </Link>
-            <p className="post-detail__time">1 day ago</p>
           </div>
         </div>
 
         {isEditing ? (
-          <EditPostForm post={{ caption, hashtags }} onSave={handleSave} onCancel={() => setIsEditing(false)} />
+          <EditPostForm post={{ _id: post._id, caption, hashtags }} onSave={handleSave} onCancel={() => setIsEditing(false)} />
         ) : (
           <>
             <p className="post-detail__caption">{caption}</p>
@@ -52,7 +78,7 @@ function PostDetail({ post, isOwner, children }) {
                 <button type="button" className="btn btn-secondary" onClick={() => setIsEditing(true)}>
                   edit description / hashtags
                 </button>
-                <button type="button" className="btn btn-secondary post-detail__delete">
+                <button type="button" className="btn btn-secondary post-detail__delete" onClick={handleDelete}>
                   delete post
                 </button>
               </div>
@@ -62,22 +88,32 @@ function PostDetail({ post, isOwner, children }) {
       </div>
 
       <aside className="post-detail__aside">
-        {parentAlbum && (
-          <Link to={`/album/${parentAlbum.id}`} className="post-detail__album-card">
-            <span className="post-detail__album-thumb" style={{ background: post.imageColor }} />
-            <div>
-              <p className="post-detail__album-label">belongs to album</p>
-              <p className="post-detail__album-name">{parentAlbum.name} →</p>
-            </div>
-          </Link>
-        )}
-
         {children}
 
         {!isOwner && (
-          <button type="button" className="btn btn-secondary post-detail__report">
-            report post
-          </button>
+          <div className="post-detail__report-box">
+            {!reportOpen ? (
+              <button type="button" className="btn btn-secondary post-detail__report" onClick={() => setReportOpen(true)}>
+                report post
+              </button>
+            ) : reportStatus === 'done' ? (
+              <p className="post-detail__report-done">Thanks — this post has been reported.</p>
+            ) : (
+              <form className="post-detail__report-form" onSubmit={handleReport}>
+                <label htmlFor="report-reason">reason</label>
+                <select id="report-reason" value={reportReason} onChange={(event) => setReportReason(event.target.value)}>
+                  {REPORT_REASONS.map((reason) => (
+                    <option key={reason} value={reason}>
+                      {reason}
+                    </option>
+                  ))}
+                </select>
+                <button type="submit" className="btn btn-primary" disabled={reportStatus === 'loading'}>
+                  {reportStatus === 'loading' ? 'submitting…' : 'submit report'}
+                </button>
+              </form>
+            )}
+          </div>
         )}
       </aside>
     </div>

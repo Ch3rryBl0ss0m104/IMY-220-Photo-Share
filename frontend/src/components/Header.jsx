@@ -1,12 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom';
 import SearchInput from './SearchInput.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 import './Header.css';
 
-function Header({ currentUserId = 'u1' }) {
+function Header() {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
-  const handleLogout = () => {
-    // Stubbed: no real session yet, just send the user back to the splash page.
+  const handleLogout = async () => {
+    await logout();
     navigate('/');
   };
 
@@ -23,11 +25,9 @@ function Header({ currentUserId = 'u1' }) {
           <Link to="/create-post" className="site-header__add" aria-label="Create a new post">
             +
           </Link>
-          <Link
-            to={`/profile/${currentUserId}`}
-            className="site-header__avatar"
-            aria-label="Go to your profile"
-          />
+          {user && (
+            <Link to={`/profile/${user._id}`} className="site-header__avatar" aria-label="Go to your profile" />
+          )}
           <button type="button" className="btn btn-ghost" onClick={handleLogout}>
             log out
           </button>

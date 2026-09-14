@@ -5,6 +5,7 @@ import ProfilePage from './pages/ProfilePage.jsx';
 import PostPage from './pages/PostPage.jsx';
 import CreatePostPage from './pages/CreatePostPage.jsx';
 import AlbumPage from './pages/AlbumPage.jsx';
+import RequireAuth from './components/RequireAuth.jsx';
 
 function App() {
   return (
@@ -12,11 +13,48 @@ function App() {
       <Route path="/" element={<SplashPage />} />
       <Route path="/login" element={<SplashPage initialMode="login" />} />
       <Route path="/signup" element={<SplashPage initialMode="signup" />} />
-      <Route path="/home" element={<HomePage />} />
-      <Route path="/profile/:id" element={<ProfilePage />} />
-      <Route path="/post/:id" element={<PostPage />} />
-      <Route path="/album/:id" element={<AlbumPage />} />
-      <Route path="/create-post" element={<CreatePostPage />} />
+
+      <Route
+        path="/home"
+        element={
+          <RequireAuth>
+            <HomePage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/profile/:id"
+        element={
+          <RequireAuth>
+            <ProfilePage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/post/:id"
+        element={
+          <RequireAuth>
+            <PostPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/album/:id"
+        element={
+          <RequireAuth>
+            <AlbumPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/create-post"
+        element={
+          <RequireAuth>
+            <CreatePostPage />
+          </RequireAuth>
+        }
+      />
+
       <Route path="*" element={<SplashPage />} />
     </Routes>
   );

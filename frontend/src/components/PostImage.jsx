@@ -1,7 +1,7 @@
 import './PostImage.css';
 
-function PostImage({ color, alt }) {
-  return <div className="post-image" style={{ background: color }} role="img" aria-label={alt} />;
+function PostImage({ src, alt }) {
+  return <img className="post-image" src={src} alt={alt} />;
 }
 
 export default PostImage;

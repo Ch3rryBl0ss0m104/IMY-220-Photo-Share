@@ -41,3 +41,9 @@
   font-size: 0.78rem;
   color: var(--color-ink-soft);
 }
+
+.create-post__error {
+  color: var(--color-pink-deep);
+  font-size: 0.82rem;
+  font-weight: 600;
+}

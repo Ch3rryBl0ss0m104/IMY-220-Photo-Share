@@ -61,3 +61,9 @@
   font-weight: 700;
   padding: 4px;
 }
+
+.profile-info__request-actions {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}

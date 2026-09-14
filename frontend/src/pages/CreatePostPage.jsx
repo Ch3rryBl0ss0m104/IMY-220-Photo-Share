@@ -1,14 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header.jsx';
 import CreatePost from '../components/CreatePost.jsx';
-import { currentUser } from '../data/dummyData.js';
+import { useAuth } from '../context/AuthContext.jsx';
 import './CreatePostPage.css';
 
 function CreatePostPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleCreate = () => {
-    navigate(`/profile/${currentUser.id}`);
+    navigate(`/profile/${user._id}`);
   };
 
   return (

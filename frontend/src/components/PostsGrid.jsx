@@ -9,7 +9,7 @@ function PostsGrid({ posts, emptyLabel = 'No posts yet.' }) {
   return (
     <div className="posts-grid">
       {posts.map((post) => (
-        <PostPreview key={post.id} post={post} variant="grid" />
+        <PostPreview key={post._id} post={post} variant="grid" />
       ))}
     </div>
   );

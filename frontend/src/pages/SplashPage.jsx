@@ -1,10 +1,18 @@
 import { useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import LoginForm from '../components/LoginForm.jsx';
 import SignupForm from '../components/SignupForm.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 import './SplashPage.css';
 
 function SplashPage({ initialMode = 'login' }) {
   const [mode, setMode] = useState(initialMode);
+  const { user, loading } = useAuth();
+
+  // A logged-in user shouldn't be looking at the splash page 
+  if (!loading && user) {
+    return <Navigate to="/home" replace />;
+  }
 
   return (
     <main className="splash">

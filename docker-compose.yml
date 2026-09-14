@@ -1,10 +1,22 @@
 services:
+  mongo: 
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - doodlr-mongo-data:/data/db
   backend:
     build: ./backend
     ports:
       - "5000:5000"
     environment:
       - PORT=5000
+      - MONGO_URI=mongodb://mongo:27017
+      - MONGO_DB_NAME=doodlr
+      - SESSION_SECRET=doodlr-dev-secret 
+      - FRONTEND_ORIGIN=http://localhost:5173
+    depends_on:
+      - mongo
 
   frontend:
     build: ./frontend
@@ -12,3 +24,6 @@ services:
       - "5173:5173"
     depends_on:
       - backend
+
+volumes:
+  doodlr-mongo-data:

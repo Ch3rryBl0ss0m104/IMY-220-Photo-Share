@@ -1,37 +1,65 @@
-import { useState } from 'react';
-import { getUserById } from '../data/dummyData.js';
+import { useEffect, useState } from 'react';
+import * as commentsApi from '../api/comments.js';
 import './Comments.css';
 
-function Comments({ comments }) {
+function Comments({ postId }) {
+  const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [draft, setDraft] = useState('');
-  const [localComments, setLocalComments] = useState(comments);
+  const [posting, setPosting] = useState(false);
 
-  const handleSubmit = (event) => {
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    commentsApi
+      .getComments(postId)
+      .then((data) => {
+        if (!cancelled) setComments(data.comments);
+      })
+      .catch((error) => console.error('Failed to load comments:', error))
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [postId]);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (!draft.trim()) return;
-    // Dummy local append - persistence lands with the backend deliverable.
-    setLocalComments((prev) => [...prev, { id: `temp-${prev.length}`, authorId: 'u1', text: draft.trim() }]);
-    setDraft('');
+
+    setPosting(true);
+    try {
+      const { comment } = await commentsApi.addComment(postId, draft.trim());
+      setComments((prev) => [...prev, comment]);
+      setDraft('');
+    } catch (error) {
+      console.error('Failed to post comment:', error);
+    } finally {
+      setPosting(false);
+    }
   };
 
   return (
     <section className="comments">
-      <h4>comments ({localComments.length})</h4>
+      <h4>comments ({comments.length})</h4>
 
-      <ul className="comments__list">
-        {localComments.map((comment) => {
-          const author = getUserById(comment.authorId);
-          return (
-            <li key={comment.id} className="comments__item">
-              <span className="comments__avatar" style={{ background: author?.avatarColor }} />
+      {loading ? (
+        <p className="comments__loading">loading comments…</p>
+      ) : (
+        <ul className="comments__list">
+          {comments.map((comment) => (
+            <li key={comment._id} className="comments__item">
+              <span className="comments__avatar" style={{ background: comment.author?.avatarColor }} />
               <div>
-                <p className="comments__author">{author?.name}</p>
+                <p className="comments__author">{comment.author?.name}</p>
                 <p>{comment.text}</p>
               </div>
             </li>
-          );
-        })}
-      </ul>
+          ))}
+        </ul>
+      )}
 
       <form className="comments__form" onSubmit={handleSubmit}>
         <label htmlFor="comment-draft" className="visually-hidden">
@@ -44,8 +72,8 @@ function Comments({ comments }) {
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
         />
-        <button type="submit" className="btn btn-primary">
-          post
+        <button type="submit" className="btn btn-primary" disabled={posting}>
+          {posting ? 'posting…' : 'post'}
         </button>
       </form>
     </section>

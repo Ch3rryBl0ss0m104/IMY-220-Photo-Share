@@ -1,4 +1,6 @@
 .album-page {
+  max-width: 1100px;
+  margin: 0 auto;
   padding: var(--space-5) var(--space-4);
   display: flex;
   flex-direction: column;
@@ -37,4 +39,88 @@
   font-size: 0.85rem;
   color: var(--color-ink-soft);
   font-weight: 700;
+}
+
+.album-page__edit-form {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.album-page__edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.album-page__edit-field label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-ink-soft);
+}
+
+.album-page__edit-field input,
+.album-page__edit-field textarea {
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-cream-deep);
+  background: var(--color-cream);
+  font-family: var(--font-body);
+}
+
+.album-page__edit-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.album-page__add-post {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.album-page__add-post label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-ink-soft);
+}
+
+.album-page__add-post-row {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.album-page__add-post-row select {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-cream-deep);
+  background: var(--color-cream);
+}
+
+.album-page__post-card {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.album-page__remove-btn {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  background: var(--color-white);
+  color: var(--color-pink-deep);
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-card);
 }

@@ -85,6 +85,37 @@
   color: var(--color-pink-deep);
 }
 
+.post-detail__report-box {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-4);
+}
+
+.post-detail__report-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.post-detail__report-form label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-ink-soft);
+}
+
+.post-detail__report-form select {
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-cream-deep);
+  background: var(--color-cream);
+}
+
+.post-detail__report-done {
+  color: var(--color-ink-soft);
+  font-size: 0.85rem;
+}
+
 @media (max-width: 820px) {
   .post-detail {
     grid-template-columns: 1fr;

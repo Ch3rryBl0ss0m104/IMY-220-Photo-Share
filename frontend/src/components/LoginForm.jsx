@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import * as authApi from '../api/auth.js';
+import { useAuth } from '../context/AuthContext.jsx';
 import './AuthForm.css';
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 function LoginForm() {
   const navigate = useNavigate();
+  const { setUser } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle');
+  const [serverError, setServerError] = useState('');
 
   const validate = (data) => {
     const nextErrors = {};
@@ -42,18 +44,15 @@ function LoginForm() {
     if (Object.keys(validationErrors).length > 0) return;
 
     setStatus('loading');
+    setServerError('');
     try {
-      const response = await fetch(`${API_BASE}/api/auth/signin`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
-      console.log('Sign-in response (stubbed):', data);
+      const data = await authApi.signin(formData);
+      setUser(data.user);
       setStatus('success');
       navigate('/home');
     } catch (error) {
       console.error('Sign-in request failed:', error);
+      setServerError(error.message || 'Something went wrong. Try again.');
       setStatus('error');
     }
   };
@@ -103,7 +102,7 @@ function LoginForm() {
       <button type="submit" className="btn btn-primary auth-form__submit" disabled={!isValid || status === 'loading'}>
         {status === 'loading' ? 'signing in…' : "let's go →"}
       </button>
-      {status === 'error' && <p className="auth-form__error">Something went wrong. Try again.</p>}
+      {status === 'error' && <p className="auth-form__error">{serverError}</p>}
     </form>
   );
 }

@@ -1,18 +1,28 @@
 import { useState } from 'react';
+import * as postsApi from '../api/posts.js';
 import './EditPostForm.css';
 
 function EditPostForm({ post, onSave, onCancel }) {
   const [caption, setCaption] = useState(post.caption);
   const [hashtags, setHashtags] = useState(post.hashtags.join(' '));
+  const [status, setStatus] = useState('idle');
+  const [error, setError] = useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const updated = {
-      caption,
-      hashtags: hashtags.split(' ').map((tag) => tag.trim()).filter(Boolean),
-    };
-    console.log('Post update (dummy submit):', updated);
-    onSave?.(updated);
+    setStatus('loading');
+    setError('');
+    try {
+      const { post: updatedPost } = await postsApi.updatePost(post._id, {
+        caption,
+        hashtags: hashtags.split(' ').map((tag) => tag.trim()).filter(Boolean),
+      });
+      onSave?.(updatedPost);
+    } catch (err) {
+      console.error('Post update failed:', err);
+      setError(err.message || 'Could not update post.');
+      setStatus('error');
+    }
   };
 
   return (
@@ -29,9 +39,11 @@ function EditPostForm({ post, onSave, onCancel }) {
         <input id="edit-hashtags" type="text" value={hashtags} onChange={(event) => setHashtags(event.target.value)} />
       </div>
 
+      {error && <p className="create-post__error">{error}</p>}
+
       <div className="edit-post-form__actions">
-        <button type="submit" className="btn btn-primary">
-          save changes
+        <button type="submit" className="btn btn-primary" disabled={status === 'loading'}>
+          {status === 'loading' ? 'saving…' : 'save changes'}
         </button>
         <button type="button" className="btn btn-secondary" onClick={onCancel}>
           cancel

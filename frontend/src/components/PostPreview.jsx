@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { getUserById } from '../data/dummyData.js';
 import './PostPreview.css';
 
 function timeAgo(isoDate) {
@@ -11,13 +10,12 @@ function timeAgo(isoDate) {
 }
 
 function PostPreview({ post, variant = 'feed' }) {
-  const author = getUserById(post.authorId);
-  const visibleComments = post.comments.slice(0, 2);
+  const postId = post._id;
 
   if (variant === 'grid') {
     return (
-      <Link to={`/post/${post.id}`} className="post-preview post-preview--grid">
-        <div className="post-preview__thumb" style={{ background: post.imageColor }} />
+      <Link to={`/post/${postId}`} className="post-preview post-preview--grid">
+        <img className="post-preview__thumb" src={post.image} alt={post.caption} />
         <span className="post-preview__grid-caption">{post.caption}</span>
       </Link>
     );
@@ -26,22 +24,22 @@ function PostPreview({ post, variant = 'feed' }) {
   return (
     <article className="post-preview">
       <header className="post-preview__header">
-        <span className="post-preview__avatar" style={{ background: author?.avatarColor }} />
+        <span className="post-preview__avatar" style={{ background: post.author?.avatarColor }} />
         <div>
-          <Link to={`/profile/${author?.id}`} className="post-preview__author">
-            {author?.name}
+          <Link to={`/profile/${post.author?._id}`} className="post-preview__author">
+            {post.author?.name}
           </Link>
           <p className="post-preview__time">{timeAgo(post.createdAt)}</p>
         </div>
       </header>
 
-      <Link to={`/post/${post.id}`} className="post-preview__image" style={{ background: post.imageColor }}>
-        <span className="visually-hidden">View post</span>
+      <Link to={`/post/${postId}`} className="post-preview__image-link">
+        <img className="post-preview__image" src={post.image} alt={post.caption} />
       </Link>
 
       <p className="post-preview__caption">{post.caption}</p>
 
-      {post.hashtags.length > 0 && (
+      {post.hashtags?.length > 0 && (
         <ul className="post-preview__hashtags">
           {post.hashtags.map((tag) => (
             <li key={tag} className="pill-tag">
@@ -51,37 +49,9 @@ function PostPreview({ post, variant = 'feed' }) {
         </ul>
       )}
 
-      <div className="post-preview__actions">
-        <button type="button" className="btn btn-secondary">
-          like
-        </button>
-        <button type="button" className="btn btn-secondary">
-          comment
-        </button>
-        <button type="button" className="btn btn-secondary">
-          report
-        </button>
-      </div>
-
-      {visibleComments.length > 0 && (
-        <ul className="post-preview__comments">
-          {visibleComments.map((comment) => {
-            const commenter = getUserById(comment.authorId);
-            return (
-              <li key={comment.id}>
-                <strong>{commenter?.name}</strong> {comment.text}
-              </li>
-            );
-          })}
-          {post.comments.length > visibleComments.length && (
-            <li>
-              <Link to={`/post/${post.id}`} className="post-preview__view-all">
-                view all {post.comments.length} comments →
-              </Link>
-            </li>
-          )}
-        </ul>
-      )}
+      <Link to={`/post/${postId}`} className="post-preview__view-all">
+        {post.commentCount > 0 ? `view ${post.commentCount} comment${post.commentCount === 1 ? '' : 's'} →` : 'be the first to comment →'}
+      </Link>
     </article>
   );
 }
