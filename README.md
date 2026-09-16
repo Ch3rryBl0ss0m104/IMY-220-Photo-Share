@@ -19,7 +19,7 @@ https://github.com/Ch3rryBl0ss0m104/IMY-220-Photo-Share.git
 Run each command from the project root (the folder containing this file).
 - docker compose up --build
 Then open http://localhost:5173 in Chrome.
-- docker compose exec backend npm run seed 
+- docker compose exec backend npm run seed (new terminal)
 Running undiv containers
 - docker build -t doodlr-backend ./backend
 - docker run -p 5000:5000 -e MONGO_URI="<mongouri>" doodlr-backend 

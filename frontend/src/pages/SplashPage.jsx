@@ -16,9 +16,6 @@ function SplashPage({ initialMode = 'login' }) {
 
   return (
     <main className="splash">
-      <div className="splash__decor splash__decor--dot-1" aria-hidden="true" />
-      <div className="splash__decor splash__decor--dot-2" aria-hidden="true" />
-      <div className="splash__decor splash__decor--squiggle" aria-hidden="true" />
 
       <section className="splash__intro">
         <h1 className="splash__logo">Doodlr</h1>
