@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import SearchInput from './SearchInput.jsx';
 import Avatar from './Avatar.jsx';
+import Logo from './Logo.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import './Header.css';
 
@@ -17,7 +18,9 @@ function Header() {
     <header className="site-header">
       <nav className="site-header__inner" aria-label="Main navigation">
         <Link to="/home" className="site-header__logo">
-          Doodlr
+          <Link to="/home" className="site-header__logo">
+            <Logo />
+          </Link>
         </Link>
 
         <SearchInput className="site-header__search" />

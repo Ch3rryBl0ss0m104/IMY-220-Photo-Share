@@ -4,6 +4,7 @@ import LoginForm from '../components/LoginForm.jsx';
 import SignupForm from '../components/SignupForm.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import './SplashPage.css';
+import Logo from '../components/Logo.jsx';
 
 function SplashPage({ initialMode = 'login' }) {
   const [mode, setMode] = useState(initialMode);
@@ -18,7 +19,7 @@ function SplashPage({ initialMode = 'login' }) {
     <main className="splash">
 
       <section className="splash__intro">
-        <h1 className="splash__logo">Doodlr</h1>
+        <h1 className="splash__logo"><Logo /></h1>
         <p className="splash__tagline">snap it. colour it. share it.</p>
 
         <div className="splash__pitch">
