@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PostImage from './PostImage.jsx';
 import EditPostForm from './EditPostForm.jsx';
+import Avatar from './Avatar.jsx';
 import * as postsApi from '../api/posts.js';
+import * as reportReasonsApi from '../api/reportReasons.js';
 import './PostDetail.css';
-
-const REPORT_REASONS = ['Spam', 'Inappropriate content', 'Harassment', 'Copyright violation', 'Other'];
 
 function PostDetail({ post, isOwner, children, onDeleted }) {
   const navigate = useNavigate();
@@ -13,8 +13,21 @@ function PostDetail({ post, isOwner, children, onDeleted }) {
   const [caption, setCaption] = useState(post.caption);
   const [hashtags, setHashtags] = useState(post.hashtags);
   const [reportOpen, setReportOpen] = useState(false);
-  const [reportReason, setReportReason] = useState(REPORT_REASONS[0]);
+  const [reasons, setReasons] = useState([]);
+  const [reportReason, setReportReason] = useState('');
   const [reportStatus, setReportStatus] = useState('idle');
+
+  useEffect(() => {
+    // Report reasons are admin-managed in the database, not hardcoded here, so the dropdown always reflects
+    // whatever the admin currently has configured.
+    reportReasonsApi
+      .getReportReasons()
+      .then((data) => {
+        setReasons(data.reasons);
+        if (data.reasons[0]) setReportReason(data.reasons[0].label);
+      })
+      .catch((error) => console.error('Failed to load report reasons:', error));
+  }, []);
 
   const handleSave = (updated) => {
     setCaption(updated.caption);
@@ -51,7 +64,7 @@ function PostDetail({ post, isOwner, children, onDeleted }) {
         <PostImage src={post.image} alt={caption} />
 
         <div className="post-detail__meta">
-          <span className="post-detail__avatar" style={{ background: post.author?.avatarColor }} />
+          <Avatar user={post.author} className="post-detail__avatar" />
           <div>
             <Link to={`/profile/${post.author?._id}`} className="post-detail__author">
               {post.author?.name}
@@ -67,8 +80,10 @@ function PostDetail({ post, isOwner, children, onDeleted }) {
             {hashtags.length > 0 && (
               <ul className="post-detail__hashtags">
                 {hashtags.map((tag) => (
-                  <li key={tag} className="pill-tag">
-                    {tag}
+                  <li key={tag}>
+                    <Link to={`/search?q=${encodeURIComponent(tag)}`} className="pill-tag">
+                      {tag}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -102,9 +117,9 @@ function PostDetail({ post, isOwner, children, onDeleted }) {
               <form className="post-detail__report-form" onSubmit={handleReport}>
                 <label htmlFor="report-reason">reason</label>
                 <select id="report-reason" value={reportReason} onChange={(event) => setReportReason(event.target.value)}>
-                  {REPORT_REASONS.map((reason) => (
-                    <option key={reason} value={reason}>
-                      {reason}
+                  {reasons.map((reason) => (
+                    <option key={reason._id} value={reason.label}>
+                      {reason.label}
                     </option>
                   ))}
                 </select>

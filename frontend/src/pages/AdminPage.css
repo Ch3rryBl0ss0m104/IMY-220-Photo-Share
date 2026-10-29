@@ -1,0 +1,117 @@
+.admin-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4);
+}
+
+.admin-page__tabs {
+  display: flex;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 var(--space-5);
+  flex-wrap: wrap;
+}
+
+.admin-page__tab {
+  background: var(--color-white);
+  border: 2px solid var(--color-cream-deep);
+  border-radius: var(--radius-pill);
+  padding: 8px 18px;
+  font-weight: 700;
+  color: var(--color-ink-soft);
+}
+
+.admin-page__tab.is-active {
+  background: var(--color-lavender);
+  color: var(--color-ink);
+  border-color: var(--color-lavender);
+}
+
+.admin-page__status {
+  color: var(--color-ink-soft);
+}
+
+.admin-page__reported-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4);
+}
+
+.admin-page__reported-card {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3);
+  box-shadow: var(--shadow-card);
+}
+
+.admin-page__reported-meta {
+  margin-top: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.admin-page__reasons-list {
+  font-size: 0.85rem;
+  color: var(--color-ink-soft);
+}
+
+.admin-page__reported-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.admin-page__add-reason {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  max-width: 480px;
+}
+
+.admin-page__add-reason input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-cream-deep);
+  background: var(--color-cream);
+}
+
+.admin-page__reasons-manage-list,
+.admin-page__users-list,
+.admin-page__content-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.admin-page__reasons-manage-list li,
+.admin-page__users-list li,
+.admin-page__content-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--color-white);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-3);
+  box-shadow: var(--shadow-card);
+}
+
+.admin-page__users-list li > a,
+.admin-page__content-list li > a {
+  flex: 1;
+  font-weight: 700;
+}
+
+.admin-page__username {
+  color: var(--color-ink-soft);
+  font-size: 0.85rem;
+}
+
+.admin-page__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.admin-page__content h3 {
+  margin-bottom: var(--space-2);
+}

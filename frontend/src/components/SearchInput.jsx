@@ -1,13 +1,15 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './SearchInput.css';
 
 function SearchInput({ className = '' }) {
+  const navigate = useNavigate();
   const [term, setTerm] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Search functionality is implemented in a later deliverable.
-    console.log('Search submitted for:', term);
+    if (!term.trim()) return;
+    navigate(`/search?q=${encodeURIComponent(term.trim())}`);
   };
 
   return (

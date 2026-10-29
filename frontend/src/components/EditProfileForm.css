@@ -8,6 +8,19 @@
   gap: var(--space-3);
 }
 
+.edit-profile-form__avatar-field {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.edit-profile-form__avatar-preview {
+  width: 64px;
+  height: 64px;
+  background: var(--color-peach);
+  border: 2px solid var(--color-cream-deep);
+}
+
 .edit-profile-form__field {
   display: flex;
   flex-direction: column;

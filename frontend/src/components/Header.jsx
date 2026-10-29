@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import SearchInput from './SearchInput.jsx';
+import Avatar from './Avatar.jsx';
 import { useAuth } from '../context/AuthContext.jsx';
 import './Header.css';
 
@@ -25,8 +26,15 @@ function Header() {
           <Link to="/create-post" className="site-header__add" aria-label="Create a new post">
             +
           </Link>
+          {user?.isAdmin && (
+            <Link to="/admin" className="btn btn-ghost site-header__admin-link">
+              admin
+            </Link>
+          )}
           {user && (
-            <Link to={`/profile/${user._id}`} className="site-header__avatar" aria-label="Go to your profile" />
+            <Link to={`/profile/${user._id}`} className="site-header__avatar-link" aria-label="Go to your profile">
+              <Avatar user={user} className="site-header__avatar" />
+            </Link>
           )}
           <button type="button" className="btn btn-ghost" onClick={handleLogout}>
             log out

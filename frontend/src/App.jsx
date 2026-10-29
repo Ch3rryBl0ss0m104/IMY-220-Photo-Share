@@ -5,6 +5,8 @@ import ProfilePage from './pages/ProfilePage.jsx';
 import PostPage from './pages/PostPage.jsx';
 import CreatePostPage from './pages/CreatePostPage.jsx';
 import AlbumPage from './pages/AlbumPage.jsx';
+import SearchPage from './pages/SearchPage.jsx';
+import AdminPage from './pages/AdminPage.jsx';
 import RequireAuth from './components/RequireAuth.jsx';
 
 function App() {
@@ -51,6 +53,22 @@ function App() {
         element={
           <RequireAuth>
             <CreatePostPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/search"
+        element={
+          <RequireAuth>
+            <SearchPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/admin"
+        element={
+          <RequireAuth>
+            <AdminPage />
           </RequireAuth>
         }
       />

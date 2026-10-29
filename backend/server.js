@@ -8,6 +8,9 @@ import userRoutes from './routes/userRoutes.js';
 import postRoutes from './routes/postRoutes.js';
 import commentRoutes from './routes/commentRoutes.js';
 import albumRoutes from './routes/albumRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
+import searchRoutes from './routes/searchRoutes.js';
+import reportReasonRoutes from './routes/reportReasonRoutes.js';
 
 dotenv.config({ quiet: true });
 
@@ -43,6 +46,9 @@ app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api', commentRoutes); // exposes /api/posts/:postId/comments and /api/comments/:id
 app.use('/api/albums', albumRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/search', searchRoutes);
+app.use('/api/report-reasons', reportReasonRoutes);
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import Avatar from './Avatar.jsx';
 import './PostPreview.css';
 
 function timeAgo(isoDate) {
@@ -24,7 +25,7 @@ function PostPreview({ post, variant = 'feed' }) {
   return (
     <article className="post-preview">
       <header className="post-preview__header">
-        <span className="post-preview__avatar" style={{ background: post.author?.avatarColor }} />
+        <Avatar user={post.author} className="post-preview__avatar" />
         <div>
           <Link to={`/profile/${post.author?._id}`} className="post-preview__author">
             {post.author?.name}
@@ -42,8 +43,10 @@ function PostPreview({ post, variant = 'feed' }) {
       {post.hashtags?.length > 0 && (
         <ul className="post-preview__hashtags">
           {post.hashtags.map((tag) => (
-            <li key={tag} className="pill-tag">
-              {tag}
+            <li key={tag}>
+              <Link to={`/search?q=${encodeURIComponent(tag)}`} className="pill-tag">
+                {tag}
+              </Link>
             </li>
           ))}
         </ul>

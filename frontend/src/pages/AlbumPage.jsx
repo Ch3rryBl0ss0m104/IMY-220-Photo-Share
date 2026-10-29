@@ -158,8 +158,10 @@ function AlbumPage() {
               <p>{album.description}</p>
               <ul className="album-page__hashtags">
                 {album.hashtags.map((tag) => (
-                  <li key={tag} className="pill-tag">
-                    {tag}
+                  <li key={tag}>
+                    <Link to={`/search?q=${encodeURIComponent(tag)}`} className="pill-tag">
+                      {tag}
+                    </Link>
                   </li>
                 ))}
               </ul>

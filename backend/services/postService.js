@@ -33,10 +33,41 @@ const AUTHOR_LOOKUP_STAGES = [
   { $project: { commentDocs: 0 } },
 ];
 
+// Posts reported 2+ times are hidden from the normal feeds - this is what everyone except admins sees.
+const HIDDEN_THRESHOLD = 2;
+
+export async function getFeedPosts() {
+  return postsCollection()
+    .aggregate([
+      { $match: { reportCount: { $lt: HIDDEN_THRESHOLD } } },
+      ...AUTHOR_LOOKUP_STAGES,
+      { $sort: { createdAt: -1 } },
+    ])
+    .toArray();
+}
+
+// Unfiltered - used by admin views where reported/hidden posts still need to be visible.
 export async function getAllPosts() {
   return postsCollection()
     .aggregate([...AUTHOR_LOOKUP_STAGES, { $sort: { createdAt: -1 } }])
     .toArray();
+}
+
+// Posts that have been reported at least once, most-reported first - feeds the admin "reported posts" tab.
+export async function getReportedPosts() {
+  return postsCollection()
+    .aggregate([
+      { $match: { reportCount: { $gt: 0 } } },
+      ...AUTHOR_LOOKUP_STAGES,
+      { $sort: { reportCount: -1, createdAt: -1 } },
+    ])
+    .toArray();
+}
+
+// Admin "dismiss reports" - clears the reports on a post without deleting it, so it reappears in the normal feed.
+export async function dismissReports(id) {
+  await postsCollection().updateOne({ _id: toObjectId(id) }, { $set: { reportCount: 0, reportReasons: [] } });
+  return getPostById(id);
 }
 
 export async function getPostsByAuthor(authorId) {
@@ -66,7 +97,7 @@ export async function createPost({ authorId, image, caption, hashtags }) {
   return getPostById(result.insertedId.toString());
 }
 
-// Returns the raw (non-aggregated) post doc — used internally for ownership checks where the joined author info isn't needed.
+// Returns the raw (non-aggregated) post doc - used internally for ownership checks where the joined author info isn't needed.
 export async function getRawPostById(id) {
   return postsCollection().findOne({ _id: toObjectId(id) });
 }

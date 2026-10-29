@@ -19,9 +19,16 @@ async function seed() {
   const posts = db.collection('posts');
   const albums = db.collection('albums');
   const comments = db.collection('comments');
+  const reportReasons = db.collection('reportreasons');
 
   console.log('Clearing existing collections...');
-  await Promise.all([users.deleteMany({}), posts.deleteMany({}), albums.deleteMany({}), comments.deleteMany({})]);
+  await Promise.all([
+    users.deleteMany({}),
+    posts.deleteMany({}),
+    albums.deleteMany({}),
+    comments.deleteMany({}),
+    reportReasons.deleteMany({}),
+  ]);
 
   console.log('Creating users...');
   const now = new Date();
@@ -35,8 +42,11 @@ async function seed() {
     { name: 'Kabelo Ndlovu', username: 'kabelon', email: 'kabelo@doodlr.test', password: 'password1', bio: 'Portraits and long exposures.', avatarColor: '#aee0f2', links: [] },
     { name: 'Olivia Reddy', username: 'oliviar', email: 'olivia@doodlr.test', password: 'password1', bio: 'Sunset chaser, weekend hiker.', avatarColor: '#c3ecd0', links: [] },
     { name: 'Dean Fischer', username: 'deanf', email: 'dean@doodlr.test', password: 'password1', bio: 'Black and white film only.', avatarColor: '#fce095', links: [] },
+    { name: 'Doodlr Admin', username: 'admin', email: 'admin@doodlr.test', password: 'admin1234', bio: 'Keeping Doodlr tidy.', avatarColor: '#d7c9f7', links: [], isAdmin: true },
   ].map((u) => ({
     ...u,
+    avatarImage: null,
+    isAdmin: u.isAdmin || false,
     friends: [],
     friendRequestsIncoming: [],
     friendRequestsOutgoing: [],
@@ -45,7 +55,7 @@ async function seed() {
 
   const insertedUsers = await users.insertMany(userDefs);
   const ids = insertedUsers.insertedIds; // { 0: ObjectId, 1: ObjectId, ... }
-  const [janke, mia, theo, priya, zanele, ruan, kabelo, olivia, dean] = Object.values(ids);
+  const [janke, mia, theo, priya, zanele, ruan, kabelo, olivia, dean, admin] = Object.values(ids);
 
   console.log("Setting up friendships (test account needs at least 1)...");
   await users.updateOne({ _id: janke }, { $set: { friends: [mia, theo] } });
@@ -68,7 +78,10 @@ async function seed() {
     { authorId: kabelo, caption: 'Portrait session with natural light only.', hashtags: ['#portraits'] },
     { authorId: olivia, caption: 'Hike ended right as the sun dropped.', hashtags: ['#sunsets', '#hiking'] },
     { authorId: dean, caption: 'Developed this roll myself, pretty happy with the contrast.', hashtags: ['#filmphotography'] },
-  ].map((p) => ({ ...p, image: placeholderImage, reportCount: 0, reportReasons: [], createdAt: now }));
+    // Reported 2+ times on purpose, so there's something to demo on the Admin page (hidden from the normal feed, visible to admins).
+    { authorId: ruan, caption: 'This one keeps getting reported for the demo.', hashtags: ['#test'], reportCount: 3, reportReasons: ['Spam', 'Inappropriate content', 'Spam'] },
+    { authorId: olivia, caption: 'Another post flagged twice, also for the admin demo.', hashtags: ['#test'], reportCount: 2, reportReasons: ['Harassment', 'Other'] },
+  ].map((p) => ({ reportCount: 0, reportReasons: [], ...p, image: placeholderImage, createdAt: now }));
 
   const insertedPosts = await posts.insertMany(postDefs);
   const postIds = Object.values(insertedPosts.insertedIds);
@@ -90,12 +103,22 @@ async function seed() {
     { ownerId: ruan, name: 'On The Road', description: 'Wherever the car ends up.', hashtags: ['#roadtrip'], postIds: [postIds[7]], createdAt: now },
   ]);
 
+  console.log('Adding default report reasons...');
+  await reportReasons.insertMany(
+    ['Spam', 'Inappropriate content', 'Harassment', 'Copyright violation', 'Other'].map((label) => ({
+      label,
+      createdAt: now,
+    })),
+  );
+
   console.log('\nSeed complete.');
   console.log(`Users: ${await users.countDocuments()}`);
   console.log(`Posts: ${await posts.countDocuments()}`);
   console.log(`Albums: ${await albums.countDocuments()}`);
   console.log(`Comments: ${await comments.countDocuments()}`);
+  console.log(`Report reasons: ${await reportReasons.countDocuments()}`);
   console.log('\nTest login -> email: test@test.com | password: test1234');
+  console.log(`Admin login -> email: admin@doodlr.test | password: admin1234 (user id ${admin})`);
 
   await closeDB();
   process.exit(0);

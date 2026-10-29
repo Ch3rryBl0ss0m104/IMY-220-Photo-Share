@@ -6,10 +6,10 @@ import { requireAuth } from '../middleware/requireAuth.js';
 
 const router = express.Router();
 
-// GET /api/posts - global feed, newest first, author info joined in
+// GET /api/posts - global feed, newest first, author info joined in. Posts reported 2+ times are hidden here (admins see everything via /api/admin/reported-posts).
 router.get('/', async (req, res) => {
   try {
-    const posts = await postService.getAllPosts();
+    const posts = await postService.getFeedPosts();
     return res.status(200).json({ posts });
   } catch (error) {
     console.error('Loading posts failed:', error);

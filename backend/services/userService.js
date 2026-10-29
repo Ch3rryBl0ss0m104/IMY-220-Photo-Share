@@ -22,18 +22,20 @@ export async function findUserByEmail(email) {
   return usersCollection().findOne({ email: email.toLowerCase() });
 }
 
-export async function createUser({ name, username, email, password }) {
+export async function createUser({ name, username, email, password, isAdmin = false }) {
   const doc = {
     name,
     username: username.toLowerCase(),
     email: email.toLowerCase(),
-    password, // stored unhashed 
+    password, // stored unhashed
     bio: '',
     avatarColor: '#ffc7d6',
+    avatarImage: null, // base64 data URI once the user uploads a real profile picture
     links: [],
     friends: [],
     friendRequestsIncoming: [],
     friendRequestsOutgoing: [],
+    isAdmin, // only ever set server-side (seed data / another admin), never from a signup form
     createdAt: new Date(),
   };
   const result = await usersCollection().insertOne(doc);
@@ -46,7 +48,8 @@ export async function getUserById(id) {
 }
 
 export async function updateUser(id, updates) {
-  const allowed = ['name', 'username', 'bio', 'links', 'avatarColor'];
+  // isAdmin is deliberately excluded here - a user can never promote themselves by PUTting their own profile.
+  const allowed = ['name', 'username', 'bio', 'links', 'avatarColor', 'avatarImage'];
   const setDoc = {};
   for (const key of allowed) {
     if (updates[key] !== undefined) setDoc[key] = updates[key];
@@ -106,6 +109,20 @@ export async function declineFriendRequest(selfId, requesterId) {
   const requesterObjectId = toObjectId(requesterId);
   await usersCollection().updateOne({ _id: selfObjectId }, { $pull: { friendRequestsIncoming: requesterObjectId } });
   await usersCollection().updateOne({ _id: requesterObjectId }, { $pull: { friendRequestsOutgoing: selfObjectId } });
+}
+
+// Admin-only helpers (called only from routes behind requireAdmin)
+
+export async function getAllUsers() {
+  return usersCollection()
+    .find({})
+    .project({ password: 0 })
+    .sort({ createdAt: -1 })
+    .toArray();
+}
+
+export async function adminDeleteUser(id) {
+  return deleteUser(id);
 }
 
 export async function removeFriend(selfId, otherId) {

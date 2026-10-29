@@ -1,3 +1,4 @@
+import Avatar from './Avatar.jsx';
 import './ProfileInfo.css';
 
 const STATUS_LABELS = {
@@ -20,7 +21,7 @@ function ProfileInfo({
 }) {
   return (
     <section className="profile-info">
-      <span className="profile-info__avatar" style={{ background: user.avatarColor }} />
+      <Avatar user={user} className="profile-info__avatar" />
 
       <div className="profile-info__details">
         <h2>

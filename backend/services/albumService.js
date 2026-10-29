@@ -16,6 +16,13 @@ const POSTS_LOOKUP_STAGES = [
   },
 ];
 
+// Admin-only - every album across every user, newest first.
+export async function getAllAlbums() {
+  return albumsCollection()
+    .aggregate([{ $sort: { createdAt: -1 } }, ...POSTS_LOOKUP_STAGES])
+    .toArray();
+}
+
 export async function getAlbumsByOwner(ownerId) {
   return albumsCollection()
     .find({ ownerId: toObjectId(ownerId) })

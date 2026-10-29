@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import * as usersApi from '../api/users.js';
+import Avatar from './Avatar.jsx';
 import './EditProfileForm.css';
 
 function EditProfileForm({ user, onSave, onCancel }) {
@@ -7,6 +8,7 @@ function EditProfileForm({ user, onSave, onCancel }) {
     name: user.name,
     username: user.username,
     bio: user.bio,
+    avatarImage: user.avatarImage || null,
   });
   const [status, setStatus] = useState('idle');
   const [error, setError] = useState('');
@@ -14,6 +16,16 @@ function EditProfileForm({ user, onSave, onCancel }) {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Converts the chosen image file to a base64 data URI, kept in state until the form is saved -
+  // the whole profile update still travels as one JSON payload, same as post images.
+  const handleImageChange = (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => setFormData((prev) => ({ ...prev, avatarImage: reader.result }));
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (event) => {
@@ -33,6 +45,14 @@ function EditProfileForm({ user, onSave, onCancel }) {
   return (
     <form className="edit-profile-form" onSubmit={handleSubmit}>
       <h3>edit profile</h3>
+
+      <div className="edit-profile-form__avatar-field">
+        <Avatar user={{ ...user, avatarImage: formData.avatarImage }} className="edit-profile-form__avatar-preview" />
+        <label htmlFor="edit-avatar" className="btn btn-secondary">
+          change profile picture
+          <input id="edit-avatar" type="file" accept="image/*" onChange={handleImageChange} className="visually-hidden" />
+        </label>
+      </div>
 
       <div className="edit-profile-form__field">
         <label htmlFor="edit-name">name</label>
