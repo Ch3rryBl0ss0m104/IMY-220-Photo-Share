@@ -3,8 +3,8 @@ import * as searchService from '../services/searchService.js';
 
 const router = express.Router();
 
-// GET /api/search?q=term - searches users, posts, and albums at once. Results stay interactive on the frontend
-// (clicking a user/post/album navigates straight to it; clicking a hashtag re-runs this same search).
+// GET /api/search?q=term - searches users, posts, and albums at once. Results stay interactive on the frontend (clicking a user/post/album navigates straight to it; clicking a hashtag re-runs 
+// this same search).
 router.get('/', async (req, res) => {
   const q = req.query.q || '';
   try {

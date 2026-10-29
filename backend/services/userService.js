@@ -35,7 +35,7 @@ export async function createUser({ name, username, email, password, isAdmin = fa
     friends: [],
     friendRequestsIncoming: [],
     friendRequestsOutgoing: [],
-    isAdmin, // only ever set server-side (seed data / another admin), never from a signup form
+    isAdmin, // only ever set server-side (seed data/another admin), never from a signup form
     createdAt: new Date(),
   };
   const result = await usersCollection().insertOne(doc);

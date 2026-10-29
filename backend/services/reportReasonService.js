@@ -1,8 +1,8 @@
 import { getDb } from '../config/db.js';
 import { toObjectId } from '../utils/objectId.js';
 
-// A small admin-managed collection of reasons someone can pick when reporting a post. Kept in the database (not hardcoded
-// in the frontend) so an admin can add or remove reasons from the Admin page without touching code.
+// A small admin-managed collection of reasons someone can pick when reporting a post. Kept in the database (not hardcoded in the frontend) so an admin can add or remove reasons from the 
+// Admin page without touching code.
 
 function reasonsCollection() {
   return getDb().collection('reportreasons');
